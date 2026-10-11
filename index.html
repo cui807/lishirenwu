@@ -1,0 +1,830 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="description" content="30道题，从100位中国历史人物中找到与你性格最相似的一位。" />
+  <meta name="theme-color" content="#eee8f7" />
+  <title>照见 · 中国历史人物性格测试</title>
+  <style>
+:root {
+  --paper: #f6f2fb;
+  --card: #fffdfd;
+  --ink: #27214f;
+  --ink-soft: #6b648d;
+  --purple: #735ec8;
+  --purple-dark: #5540a8;
+  --purple-pale: #ece7f8;
+  --cinnabar: #a45255;
+  --jade: #315f55;
+  --line: rgba(64, 48, 116, .12);
+  --serif: "Noto Serif SC", "Songti SC", serif;
+  --sans: "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --radius: 26px;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; background: #ece6f6; }
+body { margin: 0; min-height: 100vh; color: var(--ink); background: var(--paper); font-family: var(--sans); }
+button, input { font: inherit; }
+button { -webkit-tap-highlight-color: transparent; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+.paper-noise { position: fixed; inset: 0; z-index: 20; pointer-events: none; opacity: .04; mix-blend-mode: multiply; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='130' height='130'%3E%3Cfilter id='n'%3E%3CfeTurbulence baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.25'/%3E%3C/svg%3E"); }
+
+.lock-screen { position: fixed; z-index: 40; inset: 0; display: grid; place-items: center; padding: 20px; background: linear-gradient(145deg, #e9e2f5, #f6f2fb 55%, #ece7f7); }
+.lock-card { width: min(430px, 100%); padding: 36px 24px 28px; border: 1px solid rgba(115,94,200,.13); border-radius: 32px; background: rgba(255,255,255,.86); box-shadow: 0 24px 70px rgba(72,53,132,.14); text-align: center; }
+.archive-icon { display: grid; place-items: center; width: 76px; height: 76px; margin: 0 auto 20px; border-radius: 24px; color: white; background: linear-gradient(145deg, #8976dc, #5e48b2); box-shadow: 0 15px 35px rgba(91,70,170,.24); font-family: var(--serif); font-size: 36px; font-weight: 900; }
+.lock-card h1 { margin: 18px 0 8px; font-size: 28px; }
+.lock-card > p:not(.micro-label) { margin: 0; color: var(--ink-soft); font-size: 14px; }
+.lock-card form { display: grid; gap: 12px; margin-top: 28px; }
+.lock-card input { width: 100%; height: 56px; border: 1.5px solid #ddd5f0; border-radius: 17px; outline: none; color: var(--ink); background: white; text-align: center; font-size: 20px; font-weight: 700; letter-spacing: .22em; transition: .2s; }
+.lock-card input:focus { border-color: var(--purple); box-shadow: 0 0 0 4px rgba(115,94,200,.1); }
+.lock-card input.shake { animation: shake .3s ease; border-color: #b74b57; }
+@keyframes shake { 25% { transform: translateX(-6px); } 75% { transform: translateX(6px); } }
+.password-error { min-height: 20px; margin-top: 10px; color: #a23946; font-size: 13px; }
+
+.site-header { display: flex; align-items: center; justify-content: space-between; padding: 18px max(20px, env(safe-area-inset-left)); }
+.brand { display: inline-flex; align-items: center; gap: 9px; color: var(--ink); font-family: var(--serif); font-size: 18px; font-weight: 800; letter-spacing: .08em; text-decoration: none; }
+.seal { display: grid; place-items: center; width: 32px; height: 32px; color: #fff; background: var(--cinnabar); border-radius: 10px; font-size: 18px; transform: rotate(-2deg); }
+.text-btn { padding: 7px 1px; border: 0; border-bottom: 1px solid currentColor; color: var(--ink); background: transparent; cursor: pointer; font-size: 13px; }
+.screen { display: none; }
+.screen.active { display: block; animation: rise .35s ease both; }
+@keyframes rise { from { opacity: 0; transform: translateY(5px); } }
+
+.home-screen { padding: 2px 12px 14px; }
+.hero-card { width: min(920px, 100%); margin: auto; padding: 30px 20px 22px; border: 1px solid rgba(115,94,200,.1); border-radius: 34px; background: rgba(255,255,255,.82); box-shadow: 0 12px 38px rgba(70,50,125,.08); text-align: center; }
+.hero-icon { width: 70px; height: 70px; margin-bottom: 19px; border-radius: 22px; font-size: 32px; }
+.hero-card h1 { margin: 0; font-size: clamp(32px, 8.6vw, 58px); line-height: 1.35; letter-spacing: -.05em; }
+.hero-card h1 em { color: var(--purple); font-style: normal; }
+.micro-label { margin: 10px 0 0; color: #8d7bd1; font-size: 10px; font-weight: 800; letter-spacing: .2em; }
+.micro-label.light { color: #cbbcf0; }
+.hero-lead { max-width: 760px; margin: 23px auto 20px; color: var(--ink-soft); font-size: 14px; line-height: 1.9; }
+.feature-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.feature-grid article { padding: 17px 8px 15px; border: 1px solid rgba(116,94,200,.07); border-radius: 21px; background: #fff; box-shadow: 0 8px 20px rgba(65,47,119,.05); }
+.feature-grid b, .feature-grid span { display: block; }
+.feature-grid b { color: var(--purple); font-size: 16px; }
+.feature-grid span { margin-top: 3px; color: #8a81aa; font-size: 11px; }
+.test-note { margin-top: 12px; padding: 15px 17px; border-left: 3px solid var(--purple); border-radius: 14px; background: #faf8ff; text-align: left; }
+.test-note b { font-size: 13px; }
+.test-note p { margin: 4px 0 0; color: var(--ink-soft); font-size: 12px; line-height: 1.65; }
+.hero-actions, .result-actions { display: grid; grid-template-columns: 1fr; gap: 10px; margin-top: 16px; }
+.primary-btn, .secondary-btn { min-height: 54px; padding: 14px 20px; border-radius: 18px; cursor: pointer; font-weight: 800; transition: .2s ease; }
+.primary-btn { border: 0; color: white; background: linear-gradient(135deg, #806bd5, #6952bd); box-shadow: 0 10px 24px rgba(105,82,189,.23); }
+.primary-btn:hover { transform: translateY(-1px); box-shadow: 0 13px 28px rgba(105,82,189,.28); }
+.primary-btn span { margin-left: 18px; }
+.secondary-btn { border: 1.5px solid #d7cff0; color: var(--purple-dark); background: rgba(255,255,255,.7); }
+
+.quiz-screen { min-height: 100dvh; padding: max(18px, env(safe-area-inset-top)) 16px max(18px, env(safe-area-inset-bottom)); color: #f8f4ff; background: #1c2c27; }
+.quiz-screen.active { display: grid; place-items: center; }
+.quiz-shell { width: min(760px, 100%); }
+.quiz-topline { display: grid; grid-template-columns: 38px 1fr 38px; gap: 12px; align-items: center; }
+.icon-btn { width: 38px; height: 38px; border: 0; border-radius: 14px; color: rgba(255,255,255,.75); background: rgba(255,255,255,.06); cursor: pointer; font-size: 22px; }
+.progress-meta { display: flex; justify-content: space-between; color: rgba(255,255,255,.48); font-size: 11px; }
+.progress-meta b { color: #cbbcf0; }
+.progress-track { height: 4px; margin-top: 8px; overflow: hidden; border-radius: 999px; background: rgba(255,255,255,.09); }
+.progress-track i { display: block; height: 100%; width: 3.33%; border-radius: inherit; background: #967ee5; transition: width .25s ease; }
+.question-card { padding: 31px 4px 18px; }
+.question-number { margin: 0; color: #bda9f2; font-size: 12px; letter-spacing: .15em; }
+.question-card h2 { min-height: 112px; margin: 20px 0 10px; font-family: var(--serif); font-size: clamp(23px, 6.4vw, 38px); line-height: 1.55; }
+.question-hint { margin: 0; color: rgba(255,255,255,.4); font-size: 12px; }
+.answer-scale { display: grid; gap: 8px; margin-top: 25px; }
+.answer-option { display: flex; align-items: center; min-height: 58px; padding: 12px 16px; border: 1px solid rgba(255,255,255,.1); border-radius: 17px; color: rgba(255,255,255,.82); background: rgba(255,255,255,.035); text-align: left; cursor: pointer; transition: .16s; }
+.answer-option:hover, .answer-option:focus-visible { border-color: #9c85e5; background: rgba(125,102,201,.2); outline: none; }
+.answer-option strong { width: 38px; color: #c7b5f2; font-family: var(--serif); font-size: 19px; }
+.answer-option small { font-size: 13px; }
+.quiz-footnote { margin: 6px 0 0; color: rgba(255,255,255,.25); text-align: center; font-size: 10px; }
+
+.result-screen { min-height: 100vh; background: var(--paper); }
+.result-hero { padding: 43px 22px 31px; color: white; background: radial-gradient(circle at 80% 10%, rgba(139,111,219,.55), transparent 35%), linear-gradient(145deg, #18372f, #172821); text-align: center; }
+.match-label { margin: 22px 0 5px; color: rgba(255,255,255,.6); font-size: 13px; letter-spacing: .14em; }
+.result-hero h2 { margin: 0; color: #f4e7cb; font-family: var(--serif); font-size: clamp(54px, 16vw, 92px); letter-spacing: .08em; }
+.result-years { margin: 4px 0; color: rgba(255,255,255,.46); font-size: 12px; }
+.result-title { margin: 0; color: #d5c6f1; font-size: 13px; letter-spacing: .09em; }
+.match-pill { display: inline-flex; align-items: center; gap: 9px; margin: 19px 0 15px; padding: 8px 14px; border: 1px solid rgba(255,255,255,.16); border-radius: 999px; background: rgba(255,255,255,.06); }
+.match-pill b { color: #e2d6ff; }
+.match-pill span { color: rgba(255,255,255,.55); font-size: 11px; }
+.result-summary { max-width: 680px; margin: 0 auto; color: rgba(255,255,255,.72); font-family: var(--serif); font-size: 15px; line-height: 1.9; }
+.result-content { width: min(820px, 100%); margin: auto; padding: 14px 12px 35px; }
+.content-card, .lesson-card { border: 1px solid rgba(81,62,145,.08); border-radius: 24px; background: rgba(255,255,255,.86); box-shadow: 0 8px 26px rgba(65,47,119,.06); }
+.content-card { margin-top: 12px; padding: 21px 18px; }
+.section-heading { display: flex; gap: 12px; align-items: center; }
+.section-heading > span { display: grid; place-items: center; width: 39px; height: 39px; flex: 0 0 39px; border-radius: 14px; color: var(--purple); background: var(--purple-pale); font-size: 11px; font-weight: 800; }
+.section-heading p { margin: 0 0 2px; color: var(--ink-soft); font-size: 10px; letter-spacing: .12em; }
+.section-heading h3 { margin: 0; font-family: var(--serif); font-size: 19px; }
+.trait-bars { margin-top: 18px; }
+.trait-row { display: grid; grid-template-columns: 44px 1fr 33px; gap: 10px; align-items: center; margin: 12px 0; font-size: 11px; }
+.trait-row b { text-align: right; }
+.trait-line { height: 7px; overflow: hidden; border-radius: 99px; background: #eeeaf6; }
+.trait-line i { display: block; width: 0; height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--purple), #9a86df); transition: width .8s ease .15s; }
+.bio-text { margin: 18px 0 14px; color: var(--ink-soft); font-size: 14px; line-height: 1.9; }
+.era-chip { display: inline-flex; padding: 7px 11px; border-radius: 999px; color: var(--purple-dark); background: var(--purple-pale); font-size: 11px; }
+.detail-section .section-heading { margin-bottom: 17px; }
+.insight-grid { display: grid; gap: 9px; }
+.insight-grid article, .wide-insight, .quote-lines blockquote { margin: 0; padding: 17px; border: 1px solid #ded6f3; border-radius: 18px; background: #faf8ff; }
+.insight-grid b, .wide-insight b { color: var(--ink); font-size: 14px; }
+.insight-grid p, .wide-insight p { margin: 8px 0 0; color: var(--ink-soft); font-size: 13px; line-height: 1.85; }
+.risk-grid article:nth-child(2) { background: #f7f2fb; }
+.risk-grid article:nth-child(3) { background: #f4f8f6; border-color: #d3e3dd; }
+.quote-lines { display: grid; gap: 9px; }
+.quote-lines blockquote { color: #5c5381; font-family: var(--serif); font-size: 15px; line-height: 1.75; }
+.lesson-grid { display: grid; gap: 10px; margin-top: 12px; }
+.lesson-card { padding: 22px 18px; }
+.lesson-card > span { font-size: 10px; letter-spacing: .11em; opacity: .7; }
+.lesson-card h3 { margin: 13px 0 8px; font-family: var(--serif); font-size: 20px; }
+.lesson-card p { margin: 0; font-size: 13px; line-height: 1.8; opacity: .78; }
+.gift-card { color: white; background: var(--jade); }
+.shadow-card { background: #ede4d8; }
+.companion-list { display: grid; gap: 8px; margin-top: 17px; }
+.companion { display: flex; align-items: center; justify-content: space-between; padding: 14px; border-radius: 17px; background: #f7f4fc; }
+.companion b { display: block; font-family: var(--serif); font-size: 17px; }
+.companion small { display: block; margin-top: 2px; color: var(--ink-soft); font-size: 10px; }
+.companion span { color: var(--purple); font-size: 11px; font-weight: 700; }
+.result-actions { margin: 15px 0 14px; }
+.disclaimer { margin: 0 8px; color: #8b849f; text-align: center; font-size: 10px; line-height: 1.65; }
+
+dialog { width: min(520px, calc(100% - 26px)); padding: 28px 22px 22px; border: 0; border-radius: 28px; color: var(--ink); background: var(--card); box-shadow: 0 30px 90px rgba(40,29,82,.28); }
+dialog::backdrop { background: rgba(21,18,39,.7); backdrop-filter: blur(4px); }
+dialog h2 { margin: 12px 0; font-family: var(--serif); font-size: 24px; }
+dialog p:not(.micro-label) { color: var(--ink-soft); font-size: 13px; line-height: 1.8; }
+.dialog-close { position: absolute; top: 12px; right: 14px; width: 36px; height: 36px; border: 0; border-radius: 12px; background: #f1edf7; cursor: pointer; font-size: 22px; }
+dialog .primary-btn { width: 100%; margin-top: 8px; }
+.toast { position: fixed; z-index: 50; left: 50%; bottom: max(22px, env(safe-area-inset-bottom)); padding: 11px 17px; border-radius: 999px; color: white; background: #211d38; opacity: 0; transform: translate(-50%, 14px); pointer-events: none; transition: .2s; font-size: 12px; }
+.toast.show { opacity: 1; transform: translate(-50%,0); }
+
+@media (min-width: 640px) {
+  .site-header { padding: 22px 5vw; }
+  .home-screen { padding: 4px 4vw 30px; }
+  .hero-card { padding: 42px 5vw 34px; }
+  .hero-lead { font-size: 16px; }
+  .feature-grid { gap: 14px; }
+  .feature-grid article { padding: 22px 12px; }
+  .feature-grid b { font-size: 20px; }
+  .feature-grid span { font-size: 13px; }
+  .hero-actions, .result-actions { grid-template-columns: 1fr 1fr; }
+  .question-card { padding: 48px 7%; }
+  .answer-scale { grid-template-columns: repeat(5,1fr); gap: 9px; }
+  .answer-option { min-height: 92px; display: block; text-align: center; }
+  .answer-option strong { display: block; width: auto; margin-bottom: 8px; }
+  .lesson-grid { grid-template-columns: 1fr 1fr; }
+  .insight-grid, .quote-lines { grid-template-columns: repeat(3,1fr); }
+  .insight-grid article, .quote-lines blockquote { min-height: 150px; }
+  .content-card, .lesson-card { padding: 28px; }
+}
+
+@media (min-width: 980px) {
+  body { padding: 8px; }
+  #siteContent { min-height: calc(100vh - 16px); overflow: hidden; border-radius: 34px; background: var(--paper); box-shadow: 0 0 0 1px rgba(115,94,200,.08); }
+  .hero-card { padding-left: 7vw; padding-right: 7vw; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { scroll-behavior: auto !important; animation-duration: .01ms !important; transition-duration: .01ms !important; }
+}
+
+  </style>
+</head>
+<body>
+  <div class="paper-noise" aria-hidden="true"></div>
+
+  <section class="lock-screen" id="lockScreen" aria-labelledby="lockTitle">
+    <div class="lock-card">
+      <div class="archive-icon">史</div>
+      <p class="micro-label">FIGURE ATLAS · PRIVATE ARCHIVE</p>
+      <h1 id="lockTitle">请输入访问密码</h1>
+      <p>这是一份受保护的历史人物性格档案</p>
+      <form id="passwordForm">
+        <label class="sr-only" for="passwordInput">四位数密码</label>
+        <input id="passwordInput" inputmode="numeric" autocomplete="one-time-code" maxlength="4" pattern="[0-9]{4}" placeholder="输入 4 位密码" />
+        <button class="primary-btn" type="submit">进入档案</button>
+      </form>
+      <div class="password-error" id="passwordError" role="alert"></div>
+    </div>
+  </section>
+
+  <div id="siteContent" hidden>
+    <header class="site-header">
+      <a class="brand" href="#" aria-label="照见首页"><span class="seal">照</span><span>照见</span></a>
+      <button class="text-btn" id="aboutBtn" type="button">测试说明</button>
+    </header>
+
+    <main id="app">
+      <section class="screen home-screen active" id="homeScreen" aria-labelledby="heroTitle">
+        <div class="hero-card">
+          <div class="archive-icon hero-icon">史</div>
+          <h1 id="heroTitle">你与哪位<br><em>历史人物</em>相似？</h1>
+          <p class="micro-label">FIGURE ATLAS · ANCIENT ARCHIVE</p>
+          <p class="hero-lead">通过 30 道情境选择，读取你的判断、洞察、表达与担当。从 100 位中国历史人物中，找到与你性格最相近的那一位。</p>
+
+          <div class="feature-grid" aria-label="测试特点">
+            <article><b>百人群像</b><span>跨越先秦至近代</span></article>
+            <article><b>男女皆有</b><span>多领域与多角色</span></article>
+            <article><b>六维分析</b><span>呈现性格底色</span></article>
+            <article><b>约 5 分钟</b><span>答完即时出结果</span></article>
+          </div>
+
+          <div class="test-note">
+            <b>测试说明</b>
+            <p>没有标准答案，请选择最接近真实自己的反应。答案会直接参与人物相似度计算。</p>
+          </div>
+
+          <div class="hero-actions">
+            <button class="primary-btn" id="startBtn" type="button">开始测试 <span>→</span></button>
+            <button class="secondary-btn" id="methodBtn" type="button">查看匹配方法</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen quiz-screen" id="quizScreen" aria-labelledby="questionText">
+        <div class="quiz-shell">
+          <div class="quiz-topline">
+            <button class="icon-btn" id="quizBackBtn" type="button" aria-label="返回上一题">←</button>
+            <div class="progress-wrap">
+              <div class="progress-meta"><span>寻访历史中的你</span><b id="progressText">01 / 30</b></div>
+              <div class="progress-track"><i id="progressBar"></i></div>
+            </div>
+            <button class="icon-btn" id="closeQuizBtn" type="button" aria-label="退出测试">×</button>
+          </div>
+
+          <div class="question-card">
+            <p class="question-number" id="questionNumber">第一问</p>
+            <h2 id="questionText"></h2>
+            <p class="question-hint">凭第一感觉作答，不必反复权衡。</p>
+            <div class="answer-scale" id="answerScale" role="radiogroup" aria-label="选择符合程度"></div>
+          </div>
+          <p class="quiz-footnote">答案会自动保存，可以随时返回。</p>
+        </div>
+      </section>
+
+      <section class="screen result-screen" id="resultScreen" aria-labelledby="resultName">
+        <div class="result-hero">
+          <p class="micro-label light">YOUR HISTORICAL ECHO</p>
+          <p class="match-label">你的性格最像</p>
+          <h2 id="resultName"></h2>
+          <p class="result-years" id="resultYears"></p>
+          <p class="result-title" id="resultTitle"></p>
+          <div class="match-pill"><b id="matchPercent">92%</b><span>性格契合度</span></div>
+          <p class="result-summary" id="resultSummary"></p>
+        </div>
+
+        <div class="result-content">
+          <section class="content-card profile-card">
+            <div class="section-heading"><span>01</span><div><p>性格画像</p><h3>你的六维底色</h3></div></div>
+            <div class="trait-bars" id="traitBars"></div>
+          </section>
+
+          <section class="content-card bio-card">
+            <div class="section-heading"><span>02</span><div><p>人物生平</p><h3>他／她如何走过一生</h3></div></div>
+            <p class="bio-text" id="bioText"></p>
+            <div class="era-chip" id="eraChip"></div>
+          </section>
+
+          <section class="content-card detail-section">
+            <div class="section-heading"><span>03</span><div><p>共同底色</p><h3>你与 TA 相似的三处</h3></div></div>
+            <div class="insight-grid" id="commonGround"></div>
+          </section>
+
+          <section class="content-card detail-section">
+            <div class="section-heading"><span>04</span><div><p>现实映照</p><h3>现实中的你</h3></div></div>
+            <article class="wide-insight"><b>现实互动方式</b><p id="interactionText"></p></article>
+          </section>
+
+          <section class="content-card detail-section">
+            <div class="section-heading"><span>05</span><div><p>保持清醒</p><h3>性格盲点与风险提醒</h3></div></div>
+            <div class="insight-grid risk-grid">
+              <article><b>可能的盲点</b><p id="blindSpotText"></p></article>
+              <article><b>风险提醒</b><p id="riskText"></p></article>
+              <article><b>给你的建议</b><p id="adviceText"></p></article>
+            </div>
+          </section>
+
+          <section class="content-card detail-section lines-section">
+            <div class="section-heading"><span>06</span><div><p>随身带走</p><h3>你的三句人物台词</h3></div></div>
+            <div class="quote-lines" id="quoteLines"></div>
+          </section>
+
+          <section class="content-card companion-card">
+            <div class="section-heading"><span>07</span><div><p>相近回响</p><h3>与你相似的另外两人</h3></div></div>
+            <div class="companion-list" id="companionList"></div>
+          </section>
+
+          <div class="result-actions">
+            <button class="primary-btn" id="shareBtn" type="button">复制结果文案</button>
+            <button class="secondary-btn" id="restartBtn" type="button">再测一次</button>
+          </div>
+          <p class="disclaimer">本测试用于文化体验与自我探索，不构成专业心理评估。历史人物具有复杂性，页面内容为基于公开史实的简要性格提炼。</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="aboutDialog">
+    <button class="dialog-close" id="dialogClose" type="button" aria-label="关闭">×</button>
+    <p class="micro-label">HOW IT WORKS</p>
+    <h2>100 位人物，六个性格维度</h2>
+    <p>每道题会影响远见、担当、谋略、仁厚、坚韧与旷达六个维度。系统会计算你与人物库中 100 位历史人物的向量距离，并返回最接近的结果与两位相近人物。</p>
+    <p>结果不是定论，更像一面借来的镜子。建议把注意力放在人物如何面对选择，以及他的优点曾带来什么代价。</p>
+    <button class="primary-btn" id="dialogStartBtn" type="button">开始作答</button>
+  </dialog>
+
+  <div class="toast" id="toast" role="status" aria-live="polite">结果文案已复制</div>
+  <script>
+const ACCESS_CODE = '5000';
+
+const dimensions = {
+  vision: '远见', duty: '担当', strategy: '谋略', empathy: '仁厚', resilience: '坚韧', freedom: '旷达'
+};
+
+const questions = [
+  ['做决定时，我常会想到三五年后，它会把我带到哪里。','vision'],
+  ['越是无人愿意站出来的时候，我越觉得自己应该承担责任。','duty'],
+  ['面对复杂局面，我会先观察各方立场，再决定从哪里入手。','strategy'],
+  ['即使立场不同，我也会先试着理解对方为什么这样选择。','empathy'],
+  ['遭遇重大挫折后，我通常能重新建立节奏，继续向前。','resilience'],
+  ['比起外界评价，我更看重自己是否活得真诚自在。','freedom'],
+  ['我喜欢从规律与趋势中判断下一步，而不只处理眼前问题。','vision'],
+  ['答应别人的事，再难我也会尽力做到。','duty'],
+  ['我很少把所有底牌一次亮出，更习惯保留调整空间。','strategy'],
+  ['看到他人陷入困境，我很难只从得失角度考虑。','empathy'],
+  ['长期做一件看不到即时回报的事，我也能坚持。','resilience'],
+  ['计划被打乱时，我往往能从意外里找到新的趣味。','freedom'],
+  ['我愿意为了一个更长远的目标，暂时放弃眼前的便利。','vision'],
+  ['在团队中，我常自然地成为那个把事情兜住的人。','duty'],
+  ['意见冲突时，我更愿意找到一个让局面继续推进的解法。','strategy'],
+  ['我能敏锐地察觉别人没有说出口的情绪。','empathy'],
+  ['压力越大，我越会把注意力放在仍然能做的事情上。','resilience'],
+  ['我不太愿意为了“看起来成功”而牺牲内心的舒展。','freedom'],
+  ['遇到新事物，我会先思考它可能如何改变原有规则。','vision'],
+  ['只要认定是正确的事，即使不讨好，我也愿意去做。','duty'],
+  ['我擅长把有限的人、时间和资源放到最关键的位置。','strategy'],
+  ['当效率与体面冲突时，我仍希望给人留下尊严。','empathy'],
+  ['别人认为“太难了”的目标，反而容易激起我的斗志。','resilience'],
+  ['我能接受人生有留白，不必每一步都证明什么。','freedom'],
+  ['我常把自己的经历放进更大的时代与环境中理解。','vision'],
+  ['在个人利益与共同责任之间，我通常更偏向后者。','duty'],
+  ['我会为重要目标设计多个方案，以应对变化。','strategy'],
+  ['我重视关系中的温度，哪怕这会让事情慢一点。','empathy'],
+  ['我相信很多能力，是在困难里一点点磨出来的。','resilience'],
+  ['即使身处低谷，我也常能保留幽默与对生活的兴致。','freedom']
+].map(([t,d]) => ({t,d}));
+
+const archetypes = {
+  thinker: {
+    base:[92,70,75,80,82,88], gift:['独立求真','你愿意越过现成答案，追问事情背后的秩序。保留这种独立判断，它会让你在喧闹中仍能看清方向。'],
+    shadow:['思想也要落地','不断追问可能让行动迟到。给思考设一个期限，让一次小行动替你验证答案。']
+  },
+  strategist: {
+    base:[90,83,98,62,90,55], gift:['在复杂中找到支点','你能看见资源、时机与人的位置，并把混乱重新组织成可以推进的局面。'],
+    shadow:['别把关系只看成棋局','策略感能保护你，也可能让你过度控制。偶尔坦率表达，会建立比技巧更稳固的信任。']
+  },
+  reformer: {
+    base:[94,90,89,62,95,45], gift:['敢于重写旧规则','你不仅能看见问题，也愿意承担改变带来的阻力。真正的改革往往始于不再假装一切正常。'],
+    shadow:['速度之外还有人心','正确的方向若缺少理解与缓冲，也会制造新的代价。改变制度时，也要照顾人的节奏。']
+  },
+  statesman: {
+    base:[87,96,88,80,91,45], gift:['把责任放在得失之前','你会把个人位置理解为一份责任。越在关键时刻，你越能稳定局面、守住共同目标。'],
+    shadow:['责任不等于包办','长期兜底会消耗自己，也限制他人成长。学会分担和授权，是更长久的担当。']
+  },
+  warrior: {
+    base:[80,93,82,60,97,52], gift:['在压力下向前','越是形势紧迫，你越能集中力量完成关键动作。勇气是你的行动语言。'],
+    shadow:['果断之前留一息','强大的执行力可能压过风险信号。重大决定前，主动寻找一个反证。']
+  },
+  artist: {
+    base:[76,60,52,91,79,98], gift:['把经历变成表达','你能感知别人忽略的细节，并把情绪、时代与生活重新写成有意义的作品。'],
+    shadow:['敏感需要安放','高感受力会放大美，也会放大消耗。稳定的节律与边界，能保护你的创造力。']
+  },
+  scholar: {
+    base:[88,78,73,86,89,76], gift:['用积累穿越时间','你相信真正的能力来自长期学习、记录与修正。时间会把你的认真变成深度。'],
+    shadow:['知识不是安全屋','准备得再充分，也需要走进真实世界。别用继续学习替代已经可以开始的行动。']
+  },
+  explorer: {
+    base:[94,84,76,70,99,84], gift:['把陌生变成通路','你对边界外的世界保持好奇，也有在不确定中继续前进的韧性。'],
+    shadow:['远方也需要归处','不断探索可能让你忽略恢复与归属。给自己一个稳定补充能量的根据地。']
+  },
+  healer: {
+    base:[82,88,70,96,92,58], gift:['把关怀变成方法','你不只同情困境，还愿意长期研究并提供具体帮助。温度与专业可以同时存在。'],
+    shadow:['先照顾好给予者','习惯帮助别人，容易忽视自己的耗损。明确边界，才能让善意持续。']
+  },
+  ruler: {
+    base:[91,84,94,58,93,50], gift:['在大局中作决断','你有整合资源和承担结果的意愿，面对庞杂问题时仍能保持目标感。'],
+    shadow:['力量必须被约束','位置越高，越需要真实反馈。为反对意见保留制度化的入口。']
+  },
+  diplomat: {
+    base:[88,86,91,88,88,64], gift:['让差异仍能合作','你能理解多方立场，并在冲突中寻找继续同行的可能。'],
+    shadow:['调和不等于没有立场','照顾所有人可能模糊自己的边界。温和表达明确立场，同样是一种连接。']
+  },
+  builder: {
+    base:[91,90,86,76,94,42], gift:['把宏愿变成工程','你擅长把抽象目标拆成制度、技术与日常步骤，留下可以长期运转的成果。'],
+    shadow:['成果之外还有生活','对完成度的追求容易挤压休息与关系。可持续比短期完美更重要。']
+  },
+  chronicler: {
+    base:[94,83,68,92,96,70], gift:['为时代保存真实','你能把个人经验放进更大的坐标，并愿意为值得留下的内容忍受孤独。'],
+    shadow:['使命也需要边界','宏大目标能支撑你，也可能吞没日常。不要只问是否值得，也问自己是否正在被耗尽。']
+  },
+  matriarch: {
+    base:[88,88,93,81,97,61], gift:['柔韧地建立影响','你能读懂关系与环境，在限制中寻找空间，并用长期经营形成影响力。'],
+    shadow:['警觉之外留一点信任','高度敏锐会保护你，也可能让关系变成持续防备。真正稳定的力量包含可信任的连接。']
+  }
+};
+
+const archetypeDetails = {
+  thinker: {
+    interaction:'你更愿意先理解事情的底层逻辑，再表达判断。讨论越复杂，你越重视概念是否清楚、理由是否站得住。',
+    lines:['“真正的答案，值得多问一层。”','“不随声附和，也不急着否定。”','“想明白之后，就去验证。”']
+  },
+  strategist: {
+    interaction:'你习惯先观察局势、识别关键人物与资源，再选择行动位置。你很少只凭情绪进入一场冲突。',
+    lines:['“先看全局，再动一步。”','“底牌不必尽出，方向必须清楚。”','“能推进的方案，才是好方案。”']
+  },
+  reformer: {
+    interaction:'你对低效和不合理格外敏感，常会直接指出问题并提出新方法。你希望讨论最后能转化成改变。',
+    lines:['“旧办法失效时，就重新设计。”','“改变不是口号，是承担代价。”','“方向要坚定，方法要留余地。”']
+  },
+  statesman: {
+    interaction:'你擅长稳住分歧、承担责任，并让不同的人继续合作。群体越需要有人兜底，你越容易站出来。',
+    lines:['“位置意味着责任。”','“先把共同的事做成。”','“真正的担当，也包括学会授权。”']
+  },
+  warrior: {
+    interaction:'面对压力与竞争，你更容易进入行动状态。你用明确的目标、节奏和结果回应不确定性。',
+    lines:['“困难出现时，先向前一步。”','“勇气不是无惧，是仍然行动。”','“快而不乱，决而不莽。”']
+  },
+  artist: {
+    interaction:'你先感受气氛和人的状态，再决定如何回应。你常用幽默、审美或表达，让紧张关系重新有呼吸。',
+    lines:['“感受不是负担，是线索。”','“把经历写成自己的语言。”','“生活再窄，也要留一扇窗。”']
+  },
+  scholar: {
+    interaction:'你重视证据、知识和完整背景，愿意先做功课再下判断。别人常把你视为可靠的信息来源。',
+    lines:['“慢一点，把事实弄清楚。”','“真正的积累，经得住时间。”','“学到的东西，要回到生活里。”']
+  },
+  explorer: {
+    interaction:'你对陌生人、陌生领域和新环境有较高容忍度。面对未知，你更常提出“能否试一试”，而不是立刻退回原地。',
+    lines:['“地图之外，才有新的路。”','“先出发，再修正方向。”','“远方值得，归处也值得。”']
+  },
+  healer: {
+    interaction:'你会先理解他人的困难，再寻找具体可行的帮助方式。你让人感到被看见，也重视长期改善。',
+    lines:['“理解，是帮助的第一步。”','“温柔可以很有方法。”','“照顾别人，也别遗漏自己。”']
+  },
+  ruler: {
+    interaction:'你习惯快速抓住主线、整合资源并推动决定。需要有人承担最终结果时，你通常不会躲在后面。',
+    lines:['“看见全局，也看见代价。”','“决定之后，就为结果负责。”','“权力越大，越要听见真话。”']
+  },
+  diplomat: {
+    interaction:'你擅长缓和冲突、翻译分歧，让不同的人愿意坐在同一张桌前。你会努力为关系保留余地。',
+    lines:['“先听懂，再说服。”','“关系不是妥协，是通往结果的桥。”','“温和表达，也可以立场坚定。”']
+  },
+  builder: {
+    interaction:'你喜欢把模糊目标拆成计划、规则与日常动作。团队遇到混乱时，你会本能地建立流程。',
+    lines:['“宏愿要落在每天的步骤里。”','“先让系统运转，再追求完美。”','“能留下来的，才算真正完成。”']
+  },
+  chronicler: {
+    interaction:'你会认真倾听并记住被忽视的细节，也常把眼前事件放入更长的时间线中理解。',
+    lines:['“记住真实，是一种责任。”','“个人的伤痕，也能照见时代。”','“留下证据，也留下人的复杂。”']
+  },
+  matriarch: {
+    interaction:'你能敏锐察觉关系中的力量变化，并通过耐心经营建立影响。你不一定高声表达，却很少忽略局势。',
+    lines:['“柔韧不是退让，是另一种力量。”','“看清局势，也保留真心。”','“不必争每一步，要守住长局。”']
+  }
+};
+
+const eraNarratives = {
+  '春秋':'他所处的春秋时代礼制松动、诸侯竞争，个人理想常常要在游说、实践与现实权力之间寻找位置。',
+  '战国':'战国兼并加剧，制度、军事与思想都在快速变化；他的选择既回应时代压力，也暴露了理想进入现实后的代价。',
+  '秦':'秦完成统一却迅速走向崩解，强力制度带来效率，也把权力、民生与长期稳定之间的矛盾推到极端。',
+  '秦汉之际':'这是旧秩序崩塌、新秩序尚未成形的时期，判断人心、组织力量与承受失败，往往比单次胜负更重要。',
+  '西汉':'西汉从开国恢复走向帝国扩张，个人命运与国家制度、边疆经营和宫廷政治紧密交织。',
+  '东汉':'东汉后期政治与社会结构逐渐失衡，学术、技术和个人选择常在宫廷风险与民间需要之间展开。',
+  '三国':'群雄竞争让忠诚、联盟、用人与判断变得格外重要，许多耀眼才能也因此承受了高强度的政治风险。',
+  '东晋':'东晋偏安南方，门阀政治与山水文化并存，入世责任和精神自由成为许多人反复权衡的主题。',
+  '南北朝至隋':'长期分裂逐步走向统一，地方治理、族群融合与政权更替共同考验个人的判断和信用。',
+  '隋':'短暂统一释放出强大的制度与工程能力，也说明宏大目标如果超过社会承受力，成果可能难以持久。',
+  '唐':'唐代开放而多元，仕途、战争、文化与对外交流提供广阔舞台，也让个人卷入复杂的权力与时代转折。',
+  '唐及武周':'权力结构发生罕见变化，人才流动与政治风险同时上升，个人能力必须与分寸、关系和时机共同发挥作用。',
+  '北宋':'北宋重文与制度讨论，改革、守成和公共责任长期碰撞，许多成就都伴随着激烈争论。',
+  '两宋之际':'北方失守与南渡改变了无数人的生活，个人创作、家庭记忆和时代创伤紧密交织。',
+  '南宋':'南宋长期面对外部压力与内部路线分歧，理想、妥协和未竟之志成为许多人生的底色。',
+  '元':'辽阔疆域连接不同地区与文化，技术和交流获得新空间，治理差异与社会等级也形成持续张力。',
+  '明':'明代中央权力高度集中，制度建设、边防、技术与个人操守都受到复杂政治环境的检验。',
+  '清':'清代中后期内外压力加剧，传统治理面对近代世界冲击，个人往往需要在守护、学习和改革之间选择。',
+  '近代':'旧制度迅速松动，新知识与新国家观念不断涌入，个人的表达、行动与牺牲直接参与了时代转型。'
+};
+
+const typeNarratives = {
+  thinker:'从他的经历看，真正的思想并非远离现实，而是在反复受挫后仍能提出更准确的问题，并让后来者获得新的观察尺度。',
+  strategist:'他的人生提醒我们，谋略的价值不只在赢得一局，更在看见长期后果；一旦忽略信任与边界，优势也可能反过来成为风险。',
+  reformer:'他的经历说明，改变旧规则需要勇气、耐心与执行力，也需要估计社会承受力；方向正确并不自动保证过程没有代价。',
+  statesman:'他把个人选择放进公共责任中衡量，许多关键时刻的稳住与承担构成其价值，同时也让他长期背负超过个人尺度的压力。',
+  warrior:'他的力量来自在压力下保持行动，但历史也让人看见，勇敢若缺少信息、节制和退路，可能把个人与团队推向更大风险。',
+  artist:'他把无法改变的经历转化为语言、审美与精神空间，使后人得以看见那个时代，也看见一个人如何保存自己的内在自由。',
+  scholar:'他通过长期学习、观察和记录建立影响，证明安静的积累同样可以改变时代；知识的价值最终仍要由现实应用来检验。',
+  explorer:'他不断跨越已知边界，把陌生地理、文化或经验带回原有世界；探索的光亮背后，也有长期漂泊和身心消耗。',
+  healer:'他把对生命的关切变成可传承的方法，在具体痛苦中积累经验；这种助人倾向也提醒我们，给予者同样需要休息和保护。',
+  ruler:'他有能力调动资源、决定方向并承担大局，但历史评价从不会只看结果；权力如何被约束、代价由谁承担同样重要。',
+  diplomat:'他擅长让差异仍有合作空间，证明理解他人并不意味着放弃立场；真正稳定的关系需要诚意，也需要清晰边界。',
+  builder:'他把目标变成制度、工程或可重复的方法，留下超越个人寿命的成果；长期成就来自耐心，也来自对使用者与现实条件的尊重。',
+  chronicler:'他选择记录那些可能被遗忘的人与事，让个人遭遇成为理解时代的证据；保存真实往往需要承受孤独、误解甚至伤痛。',
+  matriarch:'她在限制重重的环境中形成影响，依靠敏锐、韧性与长期经营打开空间；这份力量既值得借鉴，也需要警惕持续防备带来的消耗。'
+};
+
+// 姓名、年代、时代、性格称号、原型、生平概览。
+const peopleRaw = [
+  ['孔子','前551—前479','春秋','在动荡中守护秩序的人','thinker','周游列国推行政治理想，晚年整理典籍、教育弟子，以“仁”和“礼”影响此后两千多年。'],
+  ['老子','约前6世纪','春秋','洞察变化规律的清醒者','thinker','相传曾任周王室守藏史，后留下《道德经》，用“道法自然”反思权力、欲望与人为强求。'],
+  ['墨子','约前468—前376','战国','把理想变成行动的实践家','reformer','主张兼爱、非攻和尚贤，带领弟子奔走各国，以严密组织和技术能力阻止战争、践行主张。'],
+  ['孟子','约前372—前289','战国','相信人可以向善的辩者','thinker','游说诸侯推行仁政，在功利盛行的战国坚持性善论，把人的尊严放在政治思考中心。'],
+  ['庄子','约前369—前286','战国','守护精神自由的人','artist','拒绝权位，以寓言和想象讨论自由、生死与边界，让人在不可控的世界中保持内在开阔。'],
+  ['荀子','约前313—前238','战国','用学习塑造人的秩序者','thinker','重视后天学习与礼法教化，在诸子争鸣中建立系统思想，也培养出李斯、韩非等学生。'],
+  ['韩非','约前280—前233','战国','看透制度与人性的冷静者','strategist','集法家思想之大成，强调法、术、势；入秦后遭同门李斯构陷，思想却深刻影响秦朝治理。'],
+  ['管仲','约前723—前645','春秋','把弱局做成强局的经营者','statesman','辅佐齐桓公改革内政、发展经济并联合诸侯，使齐国成为春秋首霸，以务实治理著称。'],
+  ['商鞅','约前390—前338','战国','以制度推动巨变的改革者','reformer','在秦国推行变法，重塑军功、土地与行政制度，使秦迅速强大，也因严苛与政治反弹付出生命代价。'],
+  ['屈原','约前340—前278','战国','忠于理想的诗性灵魂','artist','曾参与楚国政务，遭排挤流放后写下《离骚》等作品，把个人命运、家国忧思与独立人格写进诗歌。'],
+  ['孙武','约前545—约前470','春秋','先胜后战的全局思考者','strategist','以《孙子兵法》系统总结战争中的信息、形势与成本，强调周密判断而非单纯好战。'],
+  ['孙膑','生卒年不详','战国','从绝境中重建布局的人','strategist','受庞涓迫害遭受膑刑，后辅佐齐国在桂陵、马陵之战取胜，把痛苦转化为冷静谋划。'],
+  ['廉颇','约前327—前243','战国','能战也能认错的将领','warrior','长期守卫赵国，以善战著称；得知误解蔺相如后负荆请罪，把国家利益置于个人面子之前。'],
+  ['蔺相如','生卒年不详','战国','以勇气化解强权的使者','diplomat','完璧归赵、渑池抗争，以胆识维护赵国尊严；面对廉颇挑衅时主动退让，成就将相和。'],
+  ['李冰','约前3世纪','战国','顺应规律的工程实践者','builder','主持修建都江堰，利用地势实现分水、排沙与灌溉，使成都平原长期受益。'],
+  ['秦始皇','前259—前210','秦','以统一重塑天下的决断者','ruler','灭六国完成统一，推行郡县、书同文与度量衡统一；宏大制度建设也伴随沉重徭役与严酷控制。'],
+  ['项羽','前232—前202','秦汉之际','以锋芒撼动时代的英雄','warrior','巨鹿之战破釜沉舟，一度成为反秦力量中心；楚汉相争中因战略与用人失误最终败于垓下。'],
+  ['刘邦','前256—前195','西汉','善用众长的现实主义者','ruler','从基层亭长起兵，在楚汉竞争中善于纳谏用人，建立汉朝并逐步调整秦制。'],
+  ['萧何','前257—前193','西汉','让组织持续运转的守成者','builder','为刘邦稳定后方、征集资源并推荐韩信，汉朝建立后主持制度建设，是开国治理的关键人物。'],
+  ['张良','约前250—前186','西汉','懂得进退的谋局者','strategist','辅佐刘邦在楚汉战争中多次作出关键决策，功成后减少对权位的依恋，留下善谋也善退的形象。'],
+  ['韩信','约前231—前196','西汉','把不可能变成战局的人','strategist','早年困顿受辱，后被萧何举荐为大将，以灵活用兵助刘邦定天下，最终因君臣猜忌被杀。'],
+  ['吕雉','前241—前180','西汉','在权力中心稳住局面的女性','matriarch','从战乱与俘虏经历中走入权力中心，刘邦去世后实际主持朝政，维持休养生息，也因残酷手段备受争议。'],
+  ['汉武帝','前156—前87','西汉','把帝国推向远方的雄心者','ruler','加强中央权力、开拓疆域并推动丝路交流，晚年面对连年用兵与巫蛊之祸反思政策代价。'],
+  ['卫青','？—前106','西汉','沉稳克制的逆袭将领','warrior','从出身卑微走到大将军，多次北击匈奴，以谨慎、善待部属和不居功著称。'],
+  ['霍去病','前140—前117','西汉','在青春中全速出击的人','warrior','少年领兵深入漠北，以高速机动屡建战功，二十四岁英年早逝，留下锐不可当的传奇。'],
+  ['张骞','约前164—前114','西汉','向未知开路的连接者','explorer','奉命出使西域，被匈奴扣留多年仍继续使命，带回重要地理与政治信息，拓展了汉朝对外交流。'],
+  ['司马迁','约前145—约前86','西汉','用一生保存真实的人','chronicler','继承父志撰写通史，因李陵之祸遭受宫刑，选择忍辱完成《史记》，为复杂人性留下记录。'],
+  ['王昭君','约前54—约前19','西汉','跨越边界的和平使者','diplomat','远嫁匈奴呼韩邪单于，在汉匈关系中成为和平交流的象征，个人选择被置于宏大时代之间。'],
+  ['班超','32—102','东汉','在异域建立新局的人','explorer','投笔从戎，在西域经营三十余年，以少量力量周旋多方，恢复汉朝在当地的影响。'],
+  ['班昭','约49—约120','东汉','以学识进入公共世界的女性','scholar','续成《汉书》并教授宫廷女性，经学与史学成就突出，也留下反映时代性别秩序的复杂著述。'],
+  ['蔡伦','？—121','东汉','让技术走进日常的改良者','builder','总结并改进造纸工艺，促进书写材料普及；其宫廷生涯也卷入东汉复杂政治。'],
+  ['张衡','78—139','东汉','仰望星空也丈量大地的人','scholar','在天文学、数学、机械与文学多有成就，制造候风地动仪，体现跨领域探索精神。'],
+  ['华佗','约145—208','东汉','敢于突破医学边界的人','healer','擅长外科与针灸，相传创麻沸散、五禽戏；因卷入曹操疑忌而死，医术多有散失。'],
+  ['张仲景','约150—219','东汉','在疫病中建立方法的人','healer','面对战乱与疫病总结临床经验，著《伤寒杂病论》，为后世中医辨证论治奠定重要基础。'],
+  ['曹操','155—220','三国','在乱世中高效整合资源的人','ruler','以军事与政治能力统一北方，重视人才与屯田；雄才、诗情和多疑共同构成其复杂形象。'],
+  ['刘备','161—223','三国','以关系凝聚人心的创业者','statesman','出身普通，历经辗转建立蜀汉，以仁厚与识人赢得追随，也在夷陵之战因情绪付出代价。'],
+  ['孙权','182—252','三国','在强邻之间守住基业的人','ruler','青年继承江东，在曹刘两强间灵活平衡，善于用人并建立吴国，晚年继承安排出现动荡。'],
+  ['诸葛亮','181—234','三国','克制而深远的理想主义者','strategist','从隆中出山辅佐刘备，治蜀、外交并数次北伐，把承诺执行到生命尽头，也留下过度承担的警示。'],
+  ['司马懿','179—251','三国','以耐心等到时机的人','strategist','在曹魏长期隐忍任事，对外抵御诸葛亮、平定辽东，晚年发动高平陵之变掌握权力。'],
+  ['周瑜','175—210','三国','才华与气度兼备的统帅','strategist','主导赤壁之战关键决策，既通音律又善统军；正史中的他胸襟开阔，并非小说中的狭隘形象。'],
+  ['蔡文姬','约177—约250','三国','在离乱中保存记忆的人','artist','战乱中被掳入南匈奴，后归汉整理父亲遗书，以诗文记录流离、亲情与时代创伤。'],
+  ['王羲之','303—361','东晋','在法度中写出自由的人','artist','出身士族而不恋仕途，以《兰亭序》等作品推动书法审美，在结构与自然表达之间取得平衡。'],
+  ['陶渊明','约365—427','东晋','清醒选择生活尺度的人','artist','数度出仕后归隐田园，以躬耕和写作重新定义成功，代价是长期贫困，收获是精神自主。'],
+  ['谢安','320—385','东晋','临大事而有静气的人','statesman','早年隐居，后在东晋危局中主持朝政，淝水之战期间保持镇定，以从容稳定人心。'],
+  ['谢道韫','生卒年不详','东晋','才思敏捷又有胆识的女性','scholar','以“咏絮之才”闻名，孙恩之乱中持械护卫家人，展现文学才华之外的果断。'],
+  ['祖逖','266—321','东晋','闻鸡起舞的行动派','warrior','青年勤学练武，东晋南渡后主动北伐收复失地，以长期自律和恢复故土的志向著称。'],
+  ['冼夫人','约512—602','南北朝至隋','以信义安定岭南的人','diplomat','在政权更迭中维护岭南稳定，促进地方治理与族群融合，被后世尊称为“岭南圣母”。'],
+  ['隋文帝','541—604','隋','结束分裂的制度重建者','builder','结束长期南北分裂，整顿财政与行政，开创开皇之治；晚年继承选择影响隋朝走向。'],
+  ['李世民','598—649','唐','在行动中不断校正的人','ruler','参与唐朝建立并在玄武门之变后即位，重视纳谏与用人，开创贞观之治，也面对权力取得的道德代价。'],
+  ['长孙皇后','601—636','唐','以克制影响权力的人','matriarch','身处皇后之位而谨慎自持，多次劝诫唐太宗善纳忠言，避免外戚过度扩张。'],
+  ['魏征','580—643','唐','敢把真话说到高处的人','statesman','从不同政治阵营转入唐太宗麾下，以直谏闻名，证明忠诚不只是顺从，也包括必要的反对。'],
+  ['李靖','571—649','唐','把判断化为精准行动的人','strategist','历经隋唐之际，率军平定多方势力并击破东突厥，以周密部署和快速行动著称。'],
+  ['武则天','624—705','唐及武周','在限制中重写规则的人','matriarch','从后宫进入政治中心，建立武周并成为中国唯一的女皇帝；用人和制度成就与酷烈手段并存。'],
+  ['上官婉儿','664—710','唐','以才华穿越权力风暴的人','matriarch','家族获罪后入宫为婢，凭文学与政治能力成为重要女官，在复杂宫廷中获得影响力。'],
+  ['狄仁杰','630—700','唐及武周','在原则与现实间办事的人','statesman','历任地方与中央官员，善断疑案、敢于进谏，并向武则天推荐多位人才。'],
+  ['玄奘','602—664','唐','为求真跨越万里的人','explorer','独自西行求法，历经艰险抵达印度，归国后翻译大量佛经，并留下重要地理见闻。'],
+  ['鉴真','688—763','唐','屡败屡行的文化渡海者','explorer','六次东渡日本，经历失明与风浪仍坚持传法，推动中日佛教、医学与文化交流。'],
+  ['文成公主','约625—680','唐','把远嫁变成文化桥梁的人','diplomat','入藏与松赞干布联姻，在唐蕃交往中成为文化交流象征，个人生命与政治使命紧密相连。'],
+  ['王维','约701—761','唐','在入世与山水间求平衡的人','artist','兼具诗、画、音乐才能，仕途与隐逸并存；安史之乱中的经历也让他的从容更显复杂。'],
+  ['李白','701—762','唐','不肯缩小自我的浪漫者','artist','以豪迈诗歌追求自由与功业，仕途屡受挫仍保持想象力，把人生的失意转化为辽阔表达。'],
+  ['杜甫','712—770','唐','把众生疾苦写进诗里的人','chronicler','一生漂泊并亲历安史之乱，以诗记录时代创伤和普通人的生活，被后世称为“诗史”。'],
+  ['白居易','772—846','唐','让表达抵达更多人的写作者','artist','主张文章合为时而著，诗风平易，既关心民生也在仕途进退中寻找自处。'],
+  ['韩愈','768—824','唐','逆流而上的价值倡导者','reformer','推动古文运动、重建儒学表达，因谏迎佛骨被贬潮州，仍治理地方、兴办教育。'],
+  ['柳宗元','773—819','唐','在贬谪中深化思想的人','scholar','参与永贞革新失败后长期被贬，在地方治理、散文与山水书写中把失意转化为深度。'],
+  ['刘禹锡','772—842','唐','跌落之后仍有锋芒的人','artist','因改革受挫多次被贬，二十余年辗转仍保持清醒与豪气，以作品回应命运起伏。'],
+  ['颜真卿','709—785','唐','把人格写进笔画的人','statesman','以端正雄浑书法著称，安史之乱中坚守抗敌，晚年奉命劝降叛将而遇害。'],
+  ['郭子仪','697—781','唐','功高而懂得自处的统帅','warrior','平定安史之乱、稳定唐室，历经多朝仍能保全家族，靠忠诚、宽厚与分寸感化解猜忌。'],
+  ['宋太祖赵匡胤','927—976','北宋','用制度降低冲突的开国者','ruler','陈桥兵变后建立宋朝，通过杯酒释兵权等方式收束军权，重建文官治理秩序。'],
+  ['寇准','961—1023','北宋','危局中敢于定调的人','statesman','澶渊之战前力主宋真宗亲征，稳定军心并促成和议，也因性格刚直屡遭政争。'],
+  ['范仲淹','989—1052','北宋','把责任放在得失之前的人','statesman','从寒门苦读进入仕途，推动庆历新政、守边兴学，将公共责任贯穿一生。'],
+  ['欧阳修','1007—1072','北宋','以宽厚培育后来者的人','scholar','推动诗文革新、主持史书编纂，并提携苏轼、曾巩等人才，在政治起伏中保持文化建设。'],
+  ['王安石','1021—1086','北宋','以制度回应现实问题的人','reformer','主持熙宁变法，试图以财政、教育和军事改革解决积弊；理想、执行与社会承受力激烈碰撞。'],
+  ['司马光','1019—1086','北宋','相信历史能照亮现实的人','chronicler','历时十九年主持编纂《资治通鉴》，政治上反对新法，以长期研究和制度保守著称。'],
+  ['苏轼','1037—1101','北宋','在风雨中仍有兴致的人','artist','屡遭贬谪仍写作、交游并改善地方生活，把失意转化为作品、幽默与对日常的热爱。'],
+  ['沈括','1031—1095','北宋','跨领域验证世界的人','scholar','在天文、地理、工程、医学等领域持续观察实验，以《梦溪笔谈》记录大量科学与技术见解。'],
+  ['包拯','999—1062','北宋','不向关系低头的执行者','statesman','任地方官与谏官期间以清廉刚正著称，敢于纠劾权贵，后世将其塑造成公正象征。'],
+  ['李清照','1084—约1155','两宋之际','以敏锐守住自我的记录者','artist','早年享有书香与金石生活，南渡后经历丧乱、失去与漂泊，仍用精确文字保存个人和时代感受。'],
+  ['岳飞','1103—1142','南宋','把信念贯彻到底的将领','warrior','率岳家军抗金并屡建战功，在主战与议和冲突中被害，成为忠诚与悲剧的象征。'],
+  ['梁红玉','约1102—1135','南宋','在战阵中鼓舞人心的女性','warrior','与韩世忠共同抗金，黄天荡之战中击鼓助战，以胆识和担当留名。'],
+  ['辛弃疾','1140—1207','南宋','文武都不肯放弃的人','warrior','青年起义抗金，归宋后长期力主北伐却多受排挤，把未竟壮志写成豪放词篇。'],
+  ['陆游','1125—1210','南宋','把一件事坚持一生的人','artist','一生心系恢复中原，仕途多挫仍不断写作，以近万首诗记录理想、日常与衰老。'],
+  ['文天祥','1236—1283','南宋','在极限处守住选择的人','statesman','南宋末组织抗元，兵败被俘后拒绝投降，最终就义，以个人生命完成价值选择。'],
+  ['忽必烈','1215—1294','元','把草原帝国转向治理的人','ruler','建立元朝并完成全国统一，吸纳多元人才与制度，同时扩张战争和等级政策造成沉重影响。'],
+  ['郭守敬','1231—1316','元','用测量校准时间的人','builder','主持天文观测、水利工程并制定《授时历》，以精确数据推动国家历法与工程。'],
+  ['黄道婆','约1245—1330','元','把技艺带回故乡的女性','builder','学习并改进棉纺织技术，返乡后传播工具与方法，推动江南棉纺业发展。'],
+  ['朱元璋','1328—1398','明','从底层建立强秩序的人','ruler','从贫困与战乱中崛起建立明朝，恢复生产、强化皇权；强烈不安全感也带来严酷清洗。'],
+  ['郑和','1371—1433','明','让舰队连接世界的人','explorer','七下西洋，率庞大船队访问亚非多地，以航海、外交与贸易展示明朝影响力。'],
+  ['于谦','1398—1457','明','危城之下稳住人心的人','statesman','土木堡之变后主持北京保卫战，力排南迁建议稳定朝局，后在政治反转中被冤杀。'],
+  ['王阳明','1472—1529','明','知行合一的破局者','thinker','经历廷杖与龙场贬谪后发展心学，又在平乱与讲学中检验思想，把认知与行动紧密相连。'],
+  ['海瑞','1514—1587','明','把清白放在前程之前的人','statesman','以清廉刚直著称，敢于上疏批评嘉靖皇帝，也在地方治理中因严峻作风引发争议。'],
+  ['戚继光','1528—1588','明','用训练战胜混乱的人','builder','针对倭患重建军队训练与阵法，形成戚家军；长期边防功绩最终仍受政局变化影响。'],
+  ['李时珍','1518—1593','明','用长期验证修正知识的人','healer','数十年访药、考证并修订旧说，完成《本草纲目》，把经验积累成系统医学成果。'],
+  ['徐霞客','1587—1641','明','用双脚丈量未知的人','explorer','三十余年游历山川，实地考察地貌水系并留下游记，把好奇心变成长期田野记录。'],
+  ['张居正','1525—1582','明','以结果推动系统改革的人','reformer','主持万历初政，推行考成法与财政改革，使国库改善；强势手段与身后清算也揭示改革风险。'],
+  ['林则徐','1785—1850','清','在压力前不回避责任的人','statesman','主持虎门销烟并抵抗外来侵略，后被贬谪仍治理边疆、研究世界，体现担当与开眼求知。'],
+  ['曾国藩','1811—1872','清','靠长期主义重塑自己的人','builder','以日课和反省训练自己，组建湘军并推动洋务实践；功业与战争代价始终相伴。'],
+  ['左宗棠','1812—1885','清','抬棺出征的强韧执行者','warrior','晚年率军收复新疆并经营西北，重视屯田、工业与教育，以强烈使命感推进艰难事务。'],
+  ['张之洞','1837—1909','清','在新旧之间搭桥的人','reformer','兴办工业、学堂与新军，主张中体西用，在传统秩序内推动近代化转型。'],
+  ['梁启超','1873—1929','近代','用新知识唤醒时代的人','chronicler','参与维新变法，流亡期间以报刊和著述传播新思想，持续反思国家、制度与公民。'],
+  ['秋瑾','1875—1907','近代','不接受命运脚本的女性','reformer','冲破传统婚姻与性别限制，赴日求学并投身革命，最终慷慨就义，成为女性解放象征。']
+];
+
+if (peopleRaw.length !== 100) throw new Error(`人物库数量错误：${peopleRaw.length}`);
+
+function hashName(name) {
+  return [...name].reduce((sum, ch, i) => (sum + ch.charCodeAt(0) * (i + 3)) % 10007, 17);
+}
+
+function buildTraits(name, type) {
+  const keys = Object.keys(dimensions);
+  const seed = hashName(name);
+  return Object.fromEntries(keys.map((key, i) => {
+    const jitter = ((seed >> (i % 5)) + i * 11) % 15 - 7;
+    return [key, Math.max(28, Math.min(100, archetypes[type].base[i] + jitter))];
+  }));
+}
+
+function expandedBiography(name, era, type, bio) {
+  const eraText = eraNarratives[era] || `${era}是中国历史不断调整制度、社会与文化关系的重要阶段，个人选择往往与更大的时代变化相互塑造。`;
+  const expanded = `${bio}${eraText}${typeNarratives[type]}`;
+  const length = expanded.replace(/\s/g,'').length;
+  if (length < 100) throw new Error(`${name}生平不足100字：${length}`);
+  return expanded;
+}
+
+const people = peopleRaw.map(([name,years,era,title,type,bio]) => ({
+  name, years, era, title, type, bio: expandedBiography(name, era, type, bio), traits: buildTraits(name, type)
+}));
+
+const scale = [
+  ['一','完全不像我',1], ['二','比较不像我',2], ['三','说不清',3], ['四','比较像我',4], ['五','非常像我',5]
+];
+
+const state = { current: 0, answers: [] };
+const $ = id => document.getElementById(id);
+const screenIds = ['homeScreen','quizScreen','resultScreen'];
+
+function unlock() {
+  sessionStorage.setItem('zhaojian-unlocked','1');
+  $('lockScreen').hidden = true;
+  $('siteContent').hidden = false;
+  window.scrollTo(0,0);
+}
+
+$('passwordForm').addEventListener('submit', event => {
+  event.preventDefault();
+  const input = $('passwordInput');
+  if (input.value === ACCESS_CODE) { unlock(); return; }
+  $('passwordError').textContent = '密码不正确，请重新输入';
+  input.classList.remove('shake');
+  void input.offsetWidth;
+  input.classList.add('shake');
+  input.select();
+});
+
+if (sessionStorage.getItem('zhaojian-unlocked') === '1') unlock();
+
+function showScreen(id) {
+  screenIds.forEach(screenId => $(screenId).classList.toggle('active', screenId === id));
+  document.querySelector('.site-header').style.display = id === 'homeScreen' ? 'flex' : 'none';
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function startTest(reset = false) {
+  if (reset) {
+    state.current = 0; state.answers = [];
+    localStorage.removeItem('zhaojian-progress-v2');
+  } else {
+    try {
+      const saved = JSON.parse(localStorage.getItem('zhaojian-progress-v2'));
+      if (saved?.answers?.length) { state.current = saved.current || 0; state.answers = saved.answers; }
+    } catch (_) {}
+  }
+  showScreen('quizScreen');
+  renderQuestion();
+}
+
+function chineseNumber(n) {
+  const nums = ['零','一','二','三','四','五','六','七','八','九','十'];
+  if (n <= 10) return nums[n];
+  if (n < 20) return '十' + nums[n - 10];
+  if (n % 10 === 0) return nums[n / 10] + '十';
+  return nums[Math.floor(n / 10)] + '十' + nums[n % 10];
+}
+
+function renderQuestion() {
+  const q = questions[state.current];
+  $('questionNumber').textContent = `第${chineseNumber(state.current + 1)}问`;
+  $('questionText').textContent = q.t;
+  $('progressText').textContent = `${String(state.current + 1).padStart(2,'0')} / 30`;
+  $('progressBar').style.width = `${(state.current + 1) / questions.length * 100}%`;
+  $('quizBackBtn').style.opacity = state.current ? '1' : '.3';
+  $('answerScale').innerHTML = scale.map(([num,label,value]) => `
+    <button class="answer-option" type="button" role="radio" aria-checked="false" data-value="${value}">
+      <strong>${num}</strong><small>${label}</small>
+    </button>`).join('');
+  [...$('answerScale').children].forEach(btn => btn.addEventListener('click', () => answer(Number(btn.dataset.value))));
+}
+
+function answer(value) {
+  state.answers[state.current] = value;
+  if (state.current < questions.length - 1) {
+    state.current += 1;
+    localStorage.setItem('zhaojian-progress-v2', JSON.stringify(state));
+    renderQuestion();
+  } else {
+    localStorage.removeItem('zhaojian-progress-v2');
+    renderResult();
+  }
+}
+
+function computeScores() {
+  const totals = Object.fromEntries(Object.keys(dimensions).map(key => [key, []]));
+  questions.forEach((q,i) => totals[q.d].push(state.answers[i] || 3));
+  return Object.fromEntries(Object.entries(totals).map(([key,values]) => [key, Math.round(values.reduce((a,b)=>a+b,0) / values.length * 20)]));
+}
+
+function similarity(a,b) {
+  const keys = Object.keys(dimensions);
+  const distance = Math.sqrt(keys.reduce((sum,key) => sum + (a[key]-b[key]) ** 2, 0) / keys.length);
+  return Math.max(42, Math.round(100 - distance * .72));
+}
+
+const traitInsights = {
+  vision:'你会自然地把眼前选择放进更长的时间线，关心它最终把人和事情带向哪里。',
+  duty:'需要有人承担时，你很难完全置身事外；承诺、责任和共同目标对你具有真实分量。',
+  strategy:'你能看见资源、时机与不同立场的组合方式，习惯为变化保留调整空间。',
+  empathy:'你能感知他人的处境和未说出口的情绪，也会把关系质量纳入自己的决定。',
+  resilience:'遇到挫折后，你倾向于重新建立节奏，而不是让一次失败定义整段人生。',
+  freedom:'你重视内心是否舒展真实，也有能力在不完美的处境中保留创造力与兴致。'
+};
+
+const blindSpots = {
+  vision:'你有时会把注意力放得太远，忽略眼前需要被及时回应的情绪、细节或身体信号。',
+  duty:'过度承担时，你可能把自己的需要放到最后，并默认“只有我来做才放心”。',
+  strategy:'持续推演局势可能让你显得保留太多，别人未必能准确理解你的真实立场。',
+  empathy:'过度照顾关系时，你可能推迟表达边界，直到压力累积成突然的疏离或情绪。',
+  resilience:'习惯坚持会让你较晚承认疲惫，也可能把必要的暂停误解成软弱或失败。',
+  freedom:'追求自在时，你可能低估结构、承诺和重复练习对长期成果的重要性。'
+};
+
+function rankedTraits(scores) {
+  return Object.entries(scores).sort((a,b)=>b[1]-a[1]).map(([key,value]) => ({key,value,label:dimensions[key]}));
+}
+
+function renderResult() {
+  const scores = computeScores();
+  const ranked = people.map(person => ({...person, match:similarity(scores,person.traits)})).sort((a,b)=>b.match-a.match);
+  const person = ranked[0];
+  const archetype = archetypes[person.type];
+  const detail = archetypeDetails[person.type];
+  const traitsRanked = rankedTraits(scores);
+  const strengths = traitsRanked.slice(0,3);
+  const weakest = traitsRanked[traitsRanked.length - 1];
+  const summary = `你与${person.name}最接近的地方，是${strengths[0].label}与${strengths[1].label}并存：既有自己的判断，也会在关键处把选择变成行动。${person.title}，正是这份性格在历史中的一种回响。`;
+
+  $('resultName').textContent = person.name;
+  $('resultYears').textContent = person.years;
+  $('resultTitle').textContent = person.title;
+  $('matchPercent').textContent = `${person.match}%`;
+  $('resultSummary').textContent = summary;
+  $('bioText').textContent = person.bio;
+  $('eraChip').textContent = `${person.era} · 100 人物库第 ${people.indexOf(people.find(p=>p.name===person.name))+1} 位`;
+  const labels = ['第一底色','隐藏天赋','长期优势'];
+  $('commonGround').innerHTML = strengths.map((trait,index) => `
+    <article><b>${labels[index]} · ${trait.label}</b><p>${traitInsights[trait.key]}这也是你与${person.name}相近的一层性格底色。</p></article>`).join('');
+  $('interactionText').textContent = `${detail.interaction} 当${strengths[0].label}与${strengths[1].label}同时发挥作用时，你更容易成为既能看见方向、又能推动局面的人。`;
+  $('blindSpotText').textContent = blindSpots[weakest.key];
+  $('riskText').textContent = archetype.shadow[1];
+  $('adviceText').textContent = `${archetype.gift[1]} 同时，刻意练习${weakest.label}，会让你的优势更稳定。`;
+  $('quoteLines').innerHTML = detail.lines.map(line => `<blockquote>${line}</blockquote>`).join('');
+  $('traitBars').innerHTML = Object.entries(scores).map(([key,value]) => `
+    <div class="trait-row"><span>${dimensions[key]}</span><div class="trait-line"><i data-width="${value}%"></i></div><b>${value}</b></div>`).join('');
+  $('companionList').innerHTML = ranked.slice(1,3).map(item => `
+    <article class="companion"><div><b>${item.name}</b><small>${item.era} · ${item.title}</small></div><span>${item.match}% 契合</span></article>`).join('');
+  $('shareBtn').dataset.text = `我的「照见」测试结果是：${person.name}型人格（${person.match}%契合）——${person.title}。我的性格关键词是${strengths.map(item=>item.label).join('、')}。`;
+  showScreen('resultScreen');
+  requestAnimationFrame(() => document.querySelectorAll('.trait-line i').forEach(bar => bar.style.width = bar.dataset.width));
+}
+
+$('startBtn').addEventListener('click', () => startTest(false));
+$('methodBtn').addEventListener('click', () => $('aboutDialog').showModal());
+$('aboutBtn').addEventListener('click', () => $('aboutDialog').showModal());
+$('dialogClose').addEventListener('click', () => $('aboutDialog').close());
+$('dialogStartBtn').addEventListener('click', () => { $('aboutDialog').close(); startTest(false); });
+$('quizBackBtn').addEventListener('click', () => { if (state.current > 0) { state.current -= 1; renderQuestion(); } });
+$('closeQuizBtn').addEventListener('click', () => { localStorage.setItem('zhaojian-progress-v2', JSON.stringify(state)); showScreen('homeScreen'); });
+$('restartBtn').addEventListener('click', () => startTest(true));
+$('shareBtn').addEventListener('click', async () => {
+  const text = $('shareBtn').dataset.text;
+  try { await navigator.clipboard.writeText(text); }
+  catch (_) {
+    const area = document.createElement('textarea'); area.value = text; document.body.appendChild(area); area.select(); document.execCommand('copy'); area.remove();
+  }
+  $('toast').classList.add('show');
+  setTimeout(() => $('toast').classList.remove('show'), 1700);
+});
+
+  </script>
+</body>
+</html>
